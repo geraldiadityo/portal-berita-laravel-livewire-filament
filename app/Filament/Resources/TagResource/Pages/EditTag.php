@@ -9,6 +9,10 @@ use Filament\Resources\Pages\EditRecord;
 class EditTag extends EditRecord
 {
     protected static string $resource = TagResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 
     protected function getHeaderActions(): array
     {

@@ -55,7 +55,9 @@ class ArticleResource extends Resource
                     Forms\Components\Section::make('Meta & Publikasi')->schema([
                         Forms\Components\FileUpload::make('featured_image')
                             ->image()
-                            ->directory('articles'),
+                            ->directory('articles')
+                            ->preserveFilenames()
+                            ->imageEditor(),
 
                         Forms\Components\Select::make('category_id')
                             ->relationship('category', 'name')
@@ -95,7 +97,9 @@ class ArticleResource extends Resource
             })
             ->columns([
                 //
-                Tables\Columns\ImageColumn::make('featured_image'),
+                Tables\Columns\ImageColumn::make('featured_image')
+                    ->disk('public')
+                    ->square(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable()
@@ -105,11 +109,7 @@ class ArticleResource extends Resource
                     ->sortable()
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('author.full_name')
-                    ->label('Penulis')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('author.full_name')
+                Tables\Columns\TextColumn::make('author.name')
                     ->label('Penulis')
                     ->sortable(),
 
