@@ -55,6 +55,7 @@ class ArticleResource extends Resource
                     Forms\Components\Section::make('Meta & Publikasi')->schema([
                         Forms\Components\FileUpload::make('featured_image')
                             ->image()
+                            ->disk('public')
                             ->directory('articles')
                             ->preserveFilenames()
                             ->imageEditor(),
@@ -81,6 +82,21 @@ class ArticleResource extends Resource
                             ]),
                     ]),
                 ])->columnSpan(['lg' => 1]),
+                Forms\Components\Section::make('Search Engine Optimization (SEO)')
+                    ->description('Atur bagaimana artikel ini tampil di google search engine')
+                    ->schema([
+                        Forms\Components\TextInput::make('seo_title')
+                            ->label('Meta Title')
+                            ->placeholder('Judul Menarik untuk google')
+                            ->maxLength(60)
+                            ->helperText('Biarkan kosong untuk menggunakan judul artikel asli'),
+
+                        Forms\Components\Textarea::make('seo_description')
+                            ->label('Meta description')
+                            ->placeholder('Ringkasan singkat yang muncul di bawah judul di hasil pencarian')
+                            ->rows(2)
+                            ->maxLength(160),
+                    ])->collapsed(),
             ])->columns(3);
     }
 
