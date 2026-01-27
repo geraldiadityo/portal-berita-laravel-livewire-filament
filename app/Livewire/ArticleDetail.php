@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Article;
+use App\Repositories\ArticleRepository;
 use Livewire\Component;
 
 class ArticleDetail extends Component
@@ -10,13 +11,9 @@ class ArticleDetail extends Component
     public Article $article;
     public string $title;
 
-    public function mount($slug)
+    public function mount($slug, ArticleRepository $repo)
     {
-        $this->article = Article::with(['category', 'author', 'tags'])
-            ->where('slug', $slug)
-            ->where('status', 'publish')
-            ->firstOrFail();
-
+        $this->article = $repo->getBySlug($slug);
         $this->title = $this->article->title;
     }
 

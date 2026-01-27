@@ -12,7 +12,7 @@
         <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">{{ $article->title }}</h1>
         <div class="flex items-center space-x-4 text-gray-600">
             <div class="flex items-center">
-                <span class="font-medium">{{ $article->author > name }}</span>
+                <span class="font-medium">{{ $article->author->name }}</span>
             </div>
             <span>&bull;</span>
             <time>{{ $article->created_at->format('d F Y, H:i') }}</time>

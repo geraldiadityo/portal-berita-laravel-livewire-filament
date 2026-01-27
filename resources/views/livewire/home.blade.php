@@ -3,7 +3,7 @@
         <section class="mb-12">
             <div class="relative rounded-xl overflow-hidden shadow-lg group cursor-pointer"
                 onclick="window.location='{{ route('article.show', $headline->slug) }}'">
-                <img src="{{ Storage::url($headline->image) }}" alt="{{ $headline->title }}"
+                <img src="{{ Storage::url($headline->featured_image) }}" alt="{{ $headline->title }}"
                     class="w-full h-96 object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex items-end p-8">
                     <div class="text-white">
@@ -51,7 +51,7 @@
                                 <span class="sr-only">{{ $article->author->name }}</span>
                                 <div
                                     class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
-                                    {{ substr($article->user->name, 0, 1) }}
+                                    {{ substr($article->author->name, 0, 1) }}
                                 </div>
                             </div>
                             <div class="ml-3">

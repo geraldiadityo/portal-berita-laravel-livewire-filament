@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Article;
+use App\Repositories\ArticleRepository;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -10,21 +11,12 @@ class Home extends Component
 {
     use WithPagination;
 
-    public function render()
+    public function render(ArticleRepository $repo)
     {
-        $article = Article::with(['category', 'user'])
-            ->where('status', 'publish')
-            ->latest()
-            ->paginate(9);
-
-        $headline = Article::with(['category', 'user'])
-            ->where('status', 'publish')
-            ->latest()
-            ->first();
 
         return view('livewire.home', [
-            'articles' => $article,
-            'headline' => $headline
+            'articles' => $repo->getLatestPaginated($this->getPage()),
+            'headline' => $repo->getHeadline()
         ]);
     }
 }

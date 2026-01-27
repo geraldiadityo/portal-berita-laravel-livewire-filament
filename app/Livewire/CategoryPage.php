@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Category;
+use App\Repositories\CategoryRepostitory;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,20 +13,16 @@ class CategoryPage extends Component
     public Category $category;
     public string $title;
 
-    public function mount($slug)
+    public function mount($slug, CategoryRepostitory $repo)
     {
-        $this->category = Category::where('slug', $slug)->firstorFail();
+        $this->category = $repo->getBySlug($slug);
         $this->title = $this->category->name;
     }
 
 
-    public function render()
+    public function render(CategoryRepostitory $repo)
     {
-        $articles = $this->category->articles()
-            ->with('author')
-            ->where('status', 'publish')
-            ->latest()
-            ->paginate(12);
+        $articles = $repo->getArticleByCategory($this->category, $this->getPage());
         return view('livewire.category-page', [
             'articles' => $articles
         ]);
