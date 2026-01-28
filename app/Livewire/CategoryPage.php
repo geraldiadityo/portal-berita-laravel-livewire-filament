@@ -22,7 +22,7 @@ class CategoryPage extends Component
 
     public function render(CategoryRepostitory $repo)
     {
-        $articles = $repo->getArticleByCategory($this->category, $this->getPage());
+        $articles = $repo->getArticleByCategory($this->category, $this->getPage(), 9);
         return view('livewire.category-page', [
             'articles' => $articles
         ]);

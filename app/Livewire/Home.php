@@ -13,10 +13,13 @@ class Home extends Component
 
     public function render(ArticleRepository $repo)
     {
-
         return view('livewire.home', [
-            'articles' => $repo->getLatestPaginated($this->getPage()),
-            'headline' => $repo->getHeadline()
+            'headline' => $repo->getHeadline(),
+            'secondaryHeadlines' => $repo->getSecondaryHeadlines(),
+            'breakingNews' => $repo->getBreakingNews(),
+            'trendingArticles' => $repo->getTrending(),
+            'popularTags' => $repo->getPopularTags(),
+            'articles' => $repo->getLatestPaginated($this->getPage(), 6),
         ]);
     }
 }

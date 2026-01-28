@@ -17,9 +17,10 @@ class ArticleDetail extends Component
         $this->title = $this->article->title;
     }
 
-
-    public function render()
+    public function render(ArticleRepository $repo)
     {
-        return view('livewire.article-detail');
+        return view('livewire.article-detail', [
+            'relatedArticles' => $repo->getRelatedArticles($this->article, 5)
+        ]);
     }
 }
