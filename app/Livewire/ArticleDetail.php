@@ -4,7 +4,11 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use App\Repositories\ArticleRepository;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
+
+use function Pest\Laravel\session;
 
 class ArticleDetail extends Component
 {
@@ -15,6 +19,13 @@ class ArticleDetail extends Component
     {
         $this->article = $repo->getBySlug($slug);
         $this->title = $this->article->title;
+        $sessionKey = 'viewed_article_' . $this->article->id;
+
+        if (!Session::has($sessionKey)) {
+            $this->article->increment('views');
+            Cache::tags(['home'])->flush();
+            Session::put($sessionKey, time());
+        }
     }
 
     public function render(ArticleRepository $repo)

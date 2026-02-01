@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
+
 class ArticleRepository
 {
     const TTL = 3600;
@@ -17,6 +18,7 @@ class ArticleRepository
         return Cache::tags(['articles', 'home'])->remember('headlines', self::TTL, function () {
             return Article::with(['category', 'author'])
                 ->where('status', 'publish')
+                // ->orderBy('views', 'desc')
                 ->latest()
                 ->first();
         });
@@ -52,8 +54,9 @@ class ArticleRepository
         return Cache::tags(['articles', 'home'])->remember("breaking_news_{$limit}", self::TTL, function () use ($limit) {
             return Article::select(['id', 'title', 'slug'])
                 ->where('status', 'publish')
-                ->latest()
-                ->limit($limit)
+                ->where('published_at', '>=', now()->subDays())
+                ->latest('published_at')
+                ->take($limit)
                 ->get();
         });
     }
@@ -66,6 +69,7 @@ class ArticleRepository
         return Cache::tags(['articles', 'home'])->remember("trending_{$limit}", self::TTL, function () use ($limit) {
             return Article::with(['category'])
                 ->where('status', 'publish')
+                ->where('published_at', '>=', now()->subWeeks(1))
                 ->orderByDesc('views')
                 ->limit($limit)
                 ->get();
@@ -109,7 +113,7 @@ class ArticleRepository
     public function getRelatedArticles(Article $article, int $limit = 5): Collection
     {
         $key = "related_articles_{$article->id}_{$limit}";
-        
+
         return Cache::tags(['articles', 'detail'])->remember($key, self::TTL, function () use ($article, $limit) {
             return Article::with(['category', 'author'])
                 ->where('category_id', $article->category_id)
