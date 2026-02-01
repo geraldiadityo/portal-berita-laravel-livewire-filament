@@ -33,61 +33,64 @@
     </div>
     @endif
 
-    {{-- Hero Section: Main Headline + Secondary Headlines --}}
+    {{-- Hero Section: Jumbotron Headline --}}
     @if($headline)
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {{-- Main Headline (Large Card) --}}
-        <div class="lg:col-span-8">
-            <a href="{{ route('article.show', $headline->slug) }}" 
-               class="group block relative rounded-2xl overflow-hidden shadow-xl h-[450px] card-hover">
-                <img src="{{ Storage::url($headline->featured_image) }}" 
-                     alt="{{ $headline->title }}"
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                <div class="absolute inset-0 gradient-overlay"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500 text-white mb-4">
-                        {{ $headline->category->name }}
-                    </span>
-                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 line-clamp-2 group-hover:text-indigo-200 transition-colors">
-                        {{ $headline->title }}
-                    </h1>
-                    <p class="text-gray-200 line-clamp-2 text-lg mb-4">
-                        {{ Str::limit(strip_tags($headline->content), 150) }}
-                    </p>
-                    <div class="flex items-center gap-4 text-sm text-gray-300">
-                        <div class="flex items-center gap-2">
-                            <div class="h-8 w-8 rounded-full bg-indigo-400 flex items-center justify-center text-white font-bold text-xs">
-                                {{ substr($headline->author->name, 0, 1) }}
-                            </div>
-                            <span>{{ $headline->author->name }}</span>
+    <section class="relative rounded-2xl overflow-hidden shadow-2xl">
+        {{-- Background Image --}}
+        <div class="absolute inset-0">
+            <img src="{{ Storage::url($headline->featured_image) }}" 
+                 alt="{{ $headline->title }}"
+                 class="w-full h-full object-cover scale-105 blur-[2px]">
+            {{-- Stronger Gradient Overlay --}}
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-900/95 via-purple-900/85 to-black/70"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        </div>
+        
+        {{-- Content --}}
+        <a href="{{ route('article.show', $headline->slug) }}" 
+           class="group relative block px-6 py-16 md:px-12 md:py-20 lg:py-28">
+            <div class="max-w-3xl">
+                {{-- Category Badge --}}
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 text-white mb-5 shadow-xl">
+                    <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                    {{ $headline->category->name }}
+                </span>
+                
+                {{-- Title with Text Shadow --}}
+                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-tight group-hover:text-indigo-200 transition-colors duration-300"
+                    style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5);">
+                    {{ $headline->title }}
+                </h1>
+                
+                {{-- Excerpt with backdrop --}}
+                <p class="text-white/90 text-base md:text-lg mb-6 line-clamp-2 max-w-2xl font-medium"
+                   style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">
+                    {{ Str::limit(strip_tags($headline->content), 180) }}
+                </p>
+                
+                {{-- Author Info with glassmorphism --}}
+                <div class="inline-flex items-center gap-4 px-5 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm ring-2 ring-white/30 shadow-lg">
+                            {{ substr($headline->author->name, 0, 1) }}
                         </div>
-                        <span class="w-1 h-1 rounded-full bg-gray-400"></span>
-                        <span>{{ $headline->created_at->diffForHumans() }}</span>
+                        <span class="font-semibold text-white">{{ $headline->author->name }}</span>
                     </div>
+                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                    <span class="text-indigo-200 font-medium">{{ $headline->created_at->diffForHumans() }}</span>
                 </div>
-            </a>
-        </div>
-
-        {{-- Secondary Headlines (3 Small Cards) --}}
-        <div class="lg:col-span-4 flex flex-col gap-4">
-            @foreach($secondaryHeadlines as $article)
-            <a href="{{ route('article.show', $article->slug) }}" 
-               class="group relative rounded-xl overflow-hidden shadow-lg flex-1 min-h-[130px] card-hover">
-                <img src="{{ Storage::url($article->featured_image) }}" 
-                     alt="{{ $article->title }}"
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute inset-0 gradient-overlay"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-4">
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/80 text-white mb-2">
-                        {{ $article->category->name }}
+                
+                {{-- Read More Button --}}
+                <div class="mt-6">
+                    <span class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-indigo-600 font-bold text-sm uppercase tracking-wider shadow-xl group-hover:bg-indigo-50 group-hover:scale-105 transition-all duration-300">
+                        Baca Selengkapnya
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
                     </span>
-                    <h3 class="text-white font-semibold line-clamp-2 group-hover:text-indigo-200 transition-colors">
-                        {{ $article->title }}
-                    </h3>
                 </div>
-            </a>
-            @endforeach
-        </div>
+            </div>
+        </a>
     </section>
     @endif
 
@@ -118,10 +121,7 @@
 
             {{-- Articles Grid --}}
             <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                @foreach($articles as $article)
-                    @if($loop->iteration <= 4 && $articles->currentPage() == 1)
-                        @continue
-                    @endif
+                @forelse($articles as $article)
                     <article class="bg-white rounded-xl overflow-hidden shadow-md card-hover group">
                         <a href="{{ route('article.show', $article->slug) }}" class="block">
                             <div class="relative overflow-hidden h-48">
@@ -167,13 +167,23 @@
                             </div>
                         </div>
                     </article>
-                @endforeach
+                @empty
+                    <div class="md:col-span-2 text-center py-12">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada berita</h3>
+                        <p class="mt-1 text-sm text-gray-500">Berita terbaru akan muncul di sini.</p>
+                    </div>
+                @endforelse
             </div>
 
             {{-- Pagination --}}
+            @if($articles->hasPages())
             <div class="mt-8">
                 {{ $articles->links() }}
             </div>
+            @endif
         </div>
 
         {{-- Sidebar --}}
