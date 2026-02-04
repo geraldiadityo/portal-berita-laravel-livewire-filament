@@ -124,4 +124,17 @@ class ArticleRepository
                 ->get();
         });
     }
+
+    public function search(string $query, int $perPage = 9): LengthAwarePaginator
+    {
+        return Article::query()
+            ->where('status', 'publish')
+            ->where(function ($q) use ($query) {
+                $q->where('title', 'like', '%' . $query . '%')
+                    ->orWhere('content', 'like', '%' . $query . '%');
+            })
+            ->with(['category', 'author'])
+            ->latest()
+            ->paginate($perPage);
+    }
 }

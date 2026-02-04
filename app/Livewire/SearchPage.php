@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Article;
+use App\Repositories\ArticleRepository;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -26,20 +27,24 @@ class SearchPage extends Component
         $this->resetPage();
     }
 
-    public function render()
+    public function render(ArticleRepository $articleRepository)
     {
         $articles = collect();
 
+        // if (strlen($this->query) >= 2) {
+        //     $articles = Article::query()
+        //         ->where('status', 'publish')
+        //         ->where(function ($q) {
+        //             $q->where('title', 'like', '%' . $this->query . '%')
+        //                 ->orWhere('content', 'like', '%' . $this->query . '%');
+        //         })
+        //         ->with(['category', 'author'])
+        //         ->latest()
+        //         ->paginate(9);
+        // }
+
         if (strlen($this->query) >= 2) {
-            $articles = Article::query()
-                ->where('status', 'published')
-                ->where(function ($q) {
-                    $q->where('title', 'like', '%' . $this->query . '%')
-                      ->orWhere('content', 'like', '%' . $this->query . '%');
-                })
-                ->with(['category', 'author'])
-                ->latest()
-                ->paginate(9);
+            $articles = $articleRepository->search($this->query);
         }
 
         return view('livewire.search-page', [
